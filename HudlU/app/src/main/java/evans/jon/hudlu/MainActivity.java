@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,25 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RecyclerView mRecyclerView;
+    private RecyclerViewAdapter mAdapter;
+    private final String[] myDataset = new String[]{
+            "Adam Gucwa",
+            "Alberto Chamorro",
+            "Chanse Strode",
+            "Craig Zheng", "David Bohner",
+            "Eric Clymer",
+            "Jessica Hoffman",
+            "Jon Evans",
+            "Jordan Degner",
+            "Mitchel Pigsley",
+            "Peter Yasi",
+            "Seth Prauner",
+            "Sue Yi",
+            "Zach Ramaekers",
+            "Mike Isman",
+            "Josh Cox"
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        mRecyclerView = (RecyclerView)findViewById(R.id.rv);
+        mAdapter = new RecyclerViewAdapter(this,myDataset);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override

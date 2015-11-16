@@ -12,5 +12,24 @@
 
     <TextView android:text="Hello Hudl!" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ffffff" />
+        android:textColor="#ffffff"
+        android:id="@+id/textView" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#652020"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:id="@+id/lin_layout">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="279dp"
+            android:layout_height="315dp"
+            android:id="@+id/rv"
+            android:background="#574747" />
+    </LinearLayout>
 </RelativeLayout>
