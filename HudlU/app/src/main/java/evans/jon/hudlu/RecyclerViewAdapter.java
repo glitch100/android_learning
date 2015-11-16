@@ -1,6 +1,7 @@
 package evans.jon.hudlu;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,15 @@ import android.widget.TextView;
  * Created by jon.evans on 16/11/2015.
  */
 
+interface OnAdapterInteractionListener {
+    void onItemClicked(View view, int position);
+}
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>{
 
+    private OnAdapterInteractionListener mListener;
+    private String[] mDataSet;
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView myText;
         public MyViewHolder(View itemView) {
@@ -23,9 +29,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    String[] mDataSet;
     public RecyclerViewAdapter(Context ctx, String[] myDataset) {
         mDataSet = myDataset;
+        mListener = (OnAdapterInteractionListener) ctx;
     }
 
     @Override
@@ -37,8 +43,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         holder.myText.setText(mDataSet[position]);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemClicked(v, position);
+            }
+        });
     }
 
 
