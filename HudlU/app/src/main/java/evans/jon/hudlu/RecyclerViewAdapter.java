@@ -73,7 +73,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap response) {
-                        Snackbar.make(holder.itemView, "Dodgeeeeee", Snackbar.LENGTH_LONG).show();
                         holder.image.setImageBitmap(response);
                     }
                 },0,0, ImageView.ScaleType.FIT_XY, null,
