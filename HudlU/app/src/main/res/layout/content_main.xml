@@ -8,28 +8,22 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity"
-    android:background="#103b39">
-
-    <TextView android:text="Hello Hudl!" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:id="@+id/textView" />
+    android:background="#efefef">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#652020"
-        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        android:id="@+id/lin_layout"
+        android:weightSum="1"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:id="@+id/lin_layout">
+        android:layout_alignParentEnd="true">
         <android.support.v7.widget.RecyclerView
-            android:layout_width="279dp"
-            android:layout_height="315dp"
+            android:layout_width="368dp"
+            android:layout_height="469dp"
             android:id="@+id/rv"
-            android:background="#574747" />
+            android:background="#ffffff"
+            android:layout_weight="0.41" />
     </LinearLayout>
 </RelativeLayout>
