@@ -16,9 +16,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -36,12 +36,12 @@ import java.util.List;
 import evans.jon.hudlu.alertDialogs.IntroAlertDialog;
 import evans.jon.hudlu.evans.jon.hudlu.models.MashableNews;
 import evans.jon.hudlu.evans.jon.hudlu.models.MashableNewsItem;
+import evans.jon.hudlu.realmModels.Favourite;
 
-public class MainActivity extends AppCompatActivity implements OnAdapterInteractionListener {
+public class FavouriteActivity extends AppCompatActivity implements OnAdapterInteractionListener {
 
-    private MashableNews mashableNews;
     private RecyclerView mRecyclerView;
-    private RecyclerViewAdapter mAdapter;
+    private RecyclerViewAdapterFav mAdapter;
 
     private final List<MashableNewsItem> myDataset = new ArrayList();
 
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnAdapterInteract
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Button b = (Button) findViewById(R.id.favouriteButton);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,28 +61,14 @@ public class MainActivity extends AppCompatActivity implements OnAdapterInteract
                         .setAction("Action", null).show();
             }
         });
+        for( Favourite f: FavouriteUtil.getAllFavourites(this)) {
+            myDataset.add(FavouriteUtil.mapNewsItem(f, this));
+        }
         mRecyclerView = (RecyclerView)findViewById(R.id.rv);
-        mAdapter = new RecyclerViewAdapter(this,myDataset);
+        mAdapter = new RecyclerViewAdapterFav(this,myDataset);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //TOOD: This is to be removed at discretion of user for testing.
-        FavouriteUtil.removeAll(this);
-        fetchLatestNews();
-
-        IntroDialog();
-    }
-
-    private void IntroDialog(){
-        String key = "IntroDialog";
-        SharedPreferences preferences = getSharedPreferences(key, Context.MODE_PRIVATE);
-        if(!preferences.getBoolean(key,false)) {
-            SharedPreferences.Editor editor = preferences.edit();
-            FragmentManager manager = getFragmentManager();
-            DialogFragment dialog = new IntroAlertDialog();
-            dialog.show(manager,key);
-            editor.putBoolean(key, true);
-            editor.apply();
-        }
+        //fetchLatestNews();
     }
 
     @Override
@@ -93,8 +80,17 @@ public class MainActivity extends AppCompatActivity implements OnAdapterInteract
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent myIntent = new Intent(MainActivity.this, FavouriteActivity.class);
-        MainActivity.this.startActivity(myIntent);
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        Log.d("HudlU","Settings menu item clicked.");
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_fav) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -106,35 +102,6 @@ public class MainActivity extends AppCompatActivity implements OnAdapterInteract
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
-        }
-    }
-
-    public void fetchLatestNews() {
-        ConnectivityManager connectivityManager = ((ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE));
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected())
-        {
-            mashableNews = new MashableNews();
-            RequestQueue queue = Volley.newRequestQueue(this);
-            Toast.makeText(this,"Just running to the shops to get the news...",Toast.LENGTH_SHORT).show();
-            StringRequest request = new StringRequest(Request.Method.GET, "http://mashable.com/stories.json?hot_per_page=0&new_per_page=5&rising_per_page=0",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            mashableNews = new Gson().fromJson(response, MashableNews.class);
-                            myDataset.addAll(mashableNews.newsItems);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("Error","Error Occured fetching news");
-                        }
-                    });
-            queue.add(request);
-        }else {
-            Toast.makeText(this,"No Internet - Bummer Bro",Toast.LENGTH_LONG).show();
         }
     }
 }
